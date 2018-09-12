@@ -1,0 +1,7 @@
+Enter the width : 400
+Enter the height : 400
+Enter the length of major axis : 100
+Enter the length of minor axis : 50
+Enter the x coordinate of center : 200
+Enter the y coordinate of center : 200
+Enter the angle in degrees : 45
