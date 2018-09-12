@@ -11,7 +11,6 @@ xC = int(data[4].split()[-1])
 yC = int(data[5].split()[-1])
 theta = float(data[6].split()[-1])
 o.close()
-print(theta)
 # opening the pgm file
 filename = 'ellipse.pgm'
 f = open(filename, 'w')
@@ -36,7 +35,7 @@ def roy(x, y):
 # function to plot the points
 
 
-def plotCircle(x, y, xC, yC):
+def plotEllipse(x, y, xC, yC):
     # full circle
     mat[xC + rox(x, y)][yC + roy(x, y)] = '255 '
     mat[xC + rox(x, -y)][yC + roy(x, -y)] = '255 '
@@ -45,12 +44,11 @@ def plotCircle(x, y, xC, yC):
 
 
 theta = theta*22/(7*180)
-print(theta)
 # for region 1
 x0, y0 = 0, ry
 P = ry**2 + (rx**2)*(0.25 - ry)
 x, y = x0, y0
-plotCircle(x, y, xC, yC)
+plotEllipse(x, y, xC, yC)
 c, a = 2*(rx**2)*y0, 0
 while ((ry**2)*x <= (rx**2)*y):
     if(P > 0):
@@ -63,12 +61,12 @@ while ((ry**2)*x <= (rx**2)*y):
         x = x + 1
         a = a + 2*(ry**2)
         P = P + ry**2 + a
-    plotCircle(x, y, xC, yC)
+    plotEllipse(x, y, xC, yC)
 # for region 2
 x0, y0 = rx, 0
 P = rx**2 + (ry**2)*(0.25 - rx)
 x, y = x0, y0
-plotCircle(x, y, xC, yC)
+plotEllipse(x, y, xC, yC)
 c, a = 2*(ry**2)*x0, 0
 while((ry**2)*x > (rx**2)*y):
     if(P > 0):
@@ -81,7 +79,7 @@ while((ry**2)*x > (rx**2)*y):
         y = y + 1
         a = a + 2*(rx**2)
         P = P + rx**2 + a
-    plotCircle(x, y, xC, yC)
+    plotEllipse(x, y, xC, yC)
 for i in range(height):
     f.writelines(mat[i])
     f.write('\n')
