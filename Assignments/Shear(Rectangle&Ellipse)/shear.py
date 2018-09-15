@@ -11,6 +11,11 @@ filename = 'circles.pgm'
 f = open(filename, 'w')
 # getting the 2d list for the window
 mat = [['0 ' for i in range(width)] for j in range(height)]
-# outputting the initial lines
+# outputting the initial lines to pgm file
 first_four_lines = ['P2\n', str(width) + ' ' + str(height) + '\n', '255\n']
 f.writelines(first_four_lines)
+# hard coding the length and breadth of the design
+a, b, = 20, 40
+# draw line function
+def drawLine(x1, y1, x2, y2):
+    
