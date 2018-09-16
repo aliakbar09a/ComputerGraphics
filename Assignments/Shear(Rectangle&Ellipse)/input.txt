@@ -2,3 +2,5 @@ Enter the width : 400
 Enter the height : 400
 Enter the x coordinate of center : 300
 Enter the y coordinate of center : 200
+Enter the value of a : 100
+Enter the value of b : 50
