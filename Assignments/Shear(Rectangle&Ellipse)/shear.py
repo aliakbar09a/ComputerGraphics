@@ -1,12 +1,30 @@
 import math as m
+
+# reading from input file
+o = open('input.txt', 'r')
+data = o.readlines()
+# getting the required inputs
+width = int(data[0].split()[-1])
+height = int(data[1].split()[-1])
+xC = int(data[2].split()[-1])
+yC = int(data[3].split()[-1])
+a = int(data[4].split()[-1])
+b = int(data[5].split()[-1])
+o.close()
+
 # shear function
 def shearx(x, y, shear):
     x = int(x + shear * y)
     return x, y
 # shifting coordinates to center
-def shift(x, y, height, width):
+def shift(x, y):
     x = int(width/2 + x)
     y = int(height/2 - y)
+    return x, y
+# shifting coordinates to center
+def shift_refl(x, y):
+    x = int(width/2 + x)
+    y = int(height/2 + y)
     return x, y
 # modulus function
 def mod(a):
@@ -14,11 +32,15 @@ def mod(a):
         return -1*a;
     return a;
 # draw line function
-def drawLine(mat, x1, y1, x2, y2, shear, height, width, center):
+def drawLine(mat, x1, y1, x2, y2, shear, reflection):
     x1, y1 = shearx(x1, y1, shear)
     x2, y2 = shearx(x2, y2, shear)
-    x1, y1 = shift(x1 + center['xC'], y1 + center['yC'], height, width)
-    x2, y2 = shift(x2 + center['yC'], y2 + center['yC'], height, width)
+    if reflection == False:
+        x1, y1 = shift(x1 + xC, y1 + yC)
+        x2, y2 = shift(x2 + yC, y2 + yC)
+    else:
+        x1, y1 = shift_refl(x1 + xC, y1 + yC)
+        x2, y2 = shift_refl(x2 + yC, y2 + yC)
     dx = x2 - x1;
     dy = y2 - y1;
     if(mod(dx) > mod(dy)):
@@ -33,19 +55,21 @@ def drawLine(mat, x1, y1, x2, y2, shear, height, width, center):
         mat[round(y1)][round(x1)] = '255 '
 # drawing ellipse
 def plotEllipse(mat, x, y, xC, yC):
-    mat[xC + rox(x, y)][yC + roy(x, y)] = '255 '
-    mat[xC + rox(x, -y)][yC + roy(x, -y)] = '255 '
-    mat[xC + rox(-x, y)][yC + roy(-x, y)] = '255 '
-    mat[xC + rox(-x, -y)][yC + roy(-x, -y)] = '255 '
+    mat[yC + roy(x, y)][xC + rox(x, y)] = '255 '
+    mat[yC + roy(x, -y)][xC + rox(x, -y)] = '255 '
+    mat[yC + roy(-x, y)][xC + rox(-x, y)] = '255 '
+    mat[yC + roy(-x, -y)][xC + rox(-x, -y)] = '255 '
+def draw_x(mat):
+    for i in range(width):
+        mat[int(height/2)][i] = '100 '
 # rotation of x
 def rox(x, y):
-    theta = 3.14 / 2
+    theta = 0
     x = int(x*m.cos(theta) - y*m.sin(theta))
     return x
-
 # rotation of y
 def roy(x, y):
-    theta = 3.14 / 2
+    theta = 0
     y = int(x*m.sin(theta) + y*m.cos(theta))
     return y
 # ellipse drawing algorithm
@@ -86,16 +110,6 @@ def ellipseAlgo(mat, rx, ry, xC, yC ):
             P = P + rx**2 + a
         plotEllipse(mat, x, y, xC, yC)
 def main():
-    o = open('input.txt', 'r')
-    data = o.readlines()
-    # getting the required inputs
-    width = int(data[0].split()[-1])
-    height = int(data[1].split()[-1])
-    xC = int(data[2].split()[-1])
-    yC = int(data[3].split()[-1])
-    a = int(data[4].split()[-1])
-    b = int(data[5].split()[-1])
-    o.close()
     # opening the pgm file
     filename = 'shear.pgm'
     f = open(filename, 'w')
@@ -104,19 +118,26 @@ def main():
     # outputting the initial lines to pgm file
     first_four_lines = ['P2\n', str(width) + ' ' + str(height) + '\n', '255\n']
     f.writelines(first_four_lines)
-    # dictionary of center
-    center = {'xC':xC, 'yC':yC}
-    # taking middle as the origin
-    ysC, xsC = shift(center['xC'], center['yC'], height, width)
     # points to plot rectangle
     x, y = int(a/2), int(b/2)
+    # draw x axis
+    draw_x(mat)
     # drawing the shear rectangle
-    drawLine(mat, -x, y, x, y, 0.5, height, width, center)
-    drawLine(mat, x, y, x, -y, 0.5, height, width, center)
-    drawLine(mat, x, -y, -x, -y, 0.5, height, width, center)
-    drawLine(mat, -x, -y, -x, y, 0.5, height, width, center)
+    drawLine(mat, -x, y, x, y, 0.5, False)
+    drawLine(mat, x, y, x, -y, 0.5, False)
+    drawLine(mat, x, -y, -x, -y, 0.5, False)
+    drawLine(mat, -x, -y, -x, y, 0.5, False)
+    # drawing the reflected shear rectangle
+    drawLine(mat, -x, y, x, y, 0.5, True)
+    drawLine(mat, x, y, x, -y, 0.5, True)
+    drawLine(mat, x, -y, -x, -y, 0.5, True)
+    drawLine(mat, -x, -y, -x, y, 0.5, True)
     # calling function to draw ellipse
-    ellipseAlgo(mat, b/4, b/2, xsC, ysC)
+    exC, eyC = shift(xC, yC)
+    ellipseAlgo(mat, b/4, b/2, exC, eyC)
+    # drawing reflection of ellipse
+    exC_refl, eyC_refl = shift_refl(xC, yC)
+    ellipseAlgo(mat, b/4, b/2, exC_refl, eyC_refl)
     for i in range(height):
         f.writelines(mat[i])
         f.write('\n')
