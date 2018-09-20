@@ -47,12 +47,14 @@ def drawLine(mat, x1, y1, x2, y2, shear, reflection):
         steps = mod(dx)
     else:
         steps = mod(dy)
-    xinc = dx / steps
-    yinc = dy / steps
+    xinc = float(dx) / steps
+    yinc = float(dy) / steps
+    print(type(xinc))
     for i in range(steps - 1):
         x1 = x1 + xinc
         y1 = y1 + yinc
-        mat[round(y1)][round(x1)] = '255 '
+        print (type(x1), y1)
+        mat[int(round(y1))][int(round(x1))] = '255 '
 # drawing ellipse
 def plotEllipse(mat, x, y, xC, yC):
     mat[yC + roy(x, y)][xC + rox(x, y)] = '255 '
