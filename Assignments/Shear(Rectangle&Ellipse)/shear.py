@@ -12,6 +12,11 @@ a = int(data[4].split()[-1])
 b = int(data[5].split()[-1])
 o.close()
 
+# modulus function
+def mod(a):
+    if(a < 0):
+        return -1*a;
+    return a;
 # shear function
 def shearx(x, y, shear):
     x = int(x + shear * y)
@@ -26,21 +31,19 @@ def shift_refl(x, y):
     x = int(width/2 + x)
     y = int(height/2 + y)
     return x, y
-# modulus function
-def mod(a):
-    if(a < 0):
-        return -1*a;
-    return a;
 # draw line function
 def drawLine(mat, x1, y1, x2, y2, shear, reflection):
     x1, y1 = shearx(x1, y1, shear)
     x2, y2 = shearx(x2, y2, shear)
+    # p, q, r, s = x1, y1, x2, y2
     if reflection == False:
         x1, y1 = shift(x1 + xC, y1 + yC)
-        x2, y2 = shift(x2 + yC, y2 + yC)
+        x2, y2 = shift(x2 + xC, y2 + yC)
     else:
         x1, y1 = shift_refl(x1 + xC, y1 + yC)
-        x2, y2 = shift_refl(x2 + yC, y2 + yC)
+        x2, y2 = shift_refl(x2 + xC, y2 + yC)
+    # x1, y1 = x1 + xC , y1 + yC
+    # x2, y2 = x2 + yC, y2 + yC
     dx = x2 - x1;
     dy = y2 - y1;
     if(mod(dx) > mod(dy)):
@@ -49,11 +52,9 @@ def drawLine(mat, x1, y1, x2, y2, shear, reflection):
         steps = mod(dy)
     xinc = float(dx) / steps
     yinc = float(dy) / steps
-    print(type(xinc))
     for i in range(steps - 1):
         x1 = x1 + xinc
         y1 = y1 + yinc
-        print (type(x1), y1)
         mat[int(round(y1))][int(round(x1))] = '255 '
 # drawing ellipse
 def plotEllipse(mat, x, y, xC, yC):
