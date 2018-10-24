@@ -146,9 +146,8 @@ def main():
         xhShift, yhShift = shift(xh + xC, yh + yC)
         drawLine(mat, xShift, yShift, xhShift, yhShift)
         x, y = xh, yh
-    writeToFile(mat)
     polyFill(mat)
-    writeToFile(mat)
+    writeToFile(mat)    
 
 
 # executing main()
